@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Julia&#39;s GENED 1201 Learning Hub: Part II</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FAFAF7; --ink:#1B1F24; --muted:#5C6370; --line:#E3E1DA;
+  --panel:#F1F2F0; --accent:#2F4B7C;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#16181C; --ink:#ECEDEF; --muted:#A3A8B2; --line:#2C3038;
+    --panel:#1E2127; --accent:#8FAAD8; color-scheme: dark;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:72px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:19px;line-height:1.7;padding-top:env(safe-area-inset-top,0px)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* Nav */
+header.top{position:sticky;top:0;z-index:10;background:var(--paper);
+  border-bottom:1px solid var(--line)}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;
+  gap:16px;height:60px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px}
+.brand{font-weight:600;color:var(--ink);text-decoration:none}
+nav a{color:var(--muted);text-decoration:none;margin-left:22px;padding:6px 0;
+  border-bottom:2px solid transparent}
+nav a:hover{color:var(--ink)}
+nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+
+main{padding:64px 0 96px}
+.page{display:none}
+.page.active{display:block}
+
+/* Type */
+h1{font-size:44px;line-height:1.15;font-weight:700;margin:0 0 16px;letter-spacing:-0.01em}
+h2{font-size:30px;line-height:1.2;font-weight:700;margin:72px 0 16px;letter-spacing:-0.005em}
+h3{font-size:21px;line-height:1.3;font-weight:600;margin:40px 0 8px}
+p{margin:0 0 18px}
+.lede{font-size:23px;line-height:1.5;color:var(--muted);margin:0 0 8px}
+.meta{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;color:var(--muted);margin:0 0 40px}
+.sec{border-top:1px solid var(--line);margin-top:72px;padding-top:4px}
+.sec h2{margin-top:40px}
+
+/* Home */
+.hero h1{font-size:52px}
+.cards{display:grid;gap:16px;margin-top:48px}
+.card{display:block;border:1px solid var(--line);border-radius:6px;padding:24px 26px;
+  text-decoration:none;color:var(--ink);background:var(--paper)}
+.card:hover{border-color:var(--accent)}
+.card .t{font-size:22px;font-weight:600;margin:0 0 4px}
+.card .d{font-size:17px;color:var(--muted);margin:0;line-height:1.5}
+.card .s{font-family:system-ui,sans-serif;font-size:14px;color:var(--accent);margin-top:12px}
+.soon{border:1px dashed var(--line);border-radius:6px;padding:20px 26px;color:var(--muted);font-size:17px}
+
+/* Blocks */
+.q{font-size:24px;line-height:1.4;font-style:italic;border-left:3px solid var(--accent);
+  padding:4px 0 4px 20px;margin:28px 0 36px;color:var(--ink)}
+.panel{background:var(--panel);border-radius:6px;padding:22px 24px;margin:24px 0;font-size:17px;line-height:1.6}
+.panel h3{margin-top:0}
+.panel p:last-child{margin-bottom:0}
+.eg{border-left:3px solid var(--accent);padding:2px 0 2px 18px;margin:24px 0;font-size:17px;color:var(--ink)}
+.eg strong{font-family:system-ui,sans-serif;font-size:14px;color:var(--accent);font-weight:600;display:block;margin-bottom:4px}
+ul.clean{padding-left:20px;margin:0 0 18px}
+ul.clean li{margin-bottom:6px}
+.formula{font-family:system-ui,sans-serif;font-size:18px;font-weight:600;text-align:center;
+  padding:18px;border:1px solid var(--line);border-radius:6px;margin:28px 0}
+
+/* Glossary */
+dl.gloss{margin:8px 0 0;display:grid;grid-template-columns:1fr;gap:0}
+dl.gloss div{border-top:1px solid var(--line);padding:14px 0}
+dl.gloss dt{font-weight:600;font-size:18px}
+dl.gloss dd{margin:4px 0 0;font-size:17px;color:var(--muted);line-height:1.55}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:16px;margin:24px 0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.tbl th,.tbl td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+.tbl th{font-weight:600;color:var(--muted);font-size:14px}
+
+/* Quiz */
+details{border:1px solid var(--line);border-radius:6px;padding:16px 20px;margin:16px 0;background:var(--paper)}
+summary{cursor:pointer;font-family:system-ui,sans-serif;font-size:16px;font-weight:600;color:var(--accent)}
+details[open] summary{margin-bottom:10px}
+details p,details li{font-size:17px}
+
+/* Checks */
+.check{display:grid;gap:12px;margin:20px 0}
+.check div{padding-left:4px;font-size:18px}
+
+/* Sources */
+ol.src{padding-left:22px;font-size:16px;line-height:1.55;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--muted)}
+ol.src li{margin-bottom:12px}
+ol.src em{color:var(--ink)}
+
+.loop{display:block;margin:28px auto;max-width:440px;width:100%;height:auto}
+.loop text{font-family:system-ui,sans-serif;font-size:14px;fill:var(--ink)}
+.loop .box{fill:var(--panel);stroke:var(--line)}
+.loop .arr{stroke:var(--accent);stroke-width:1.6;fill:none}
+
+/* Flashcards: tap or press Enter to flip */
+.fc-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:32px}
+@media (max-width:640px){.fc-grid{grid-template-columns:1fr}}
+.fc{perspective:1200px;cursor:pointer;min-height:230px;border-radius:6px;outline-offset:3px}
+.fc-in{position:relative;width:100%;min-height:230px;transition:transform .5s;transform-style:preserve-3d}
+.fc.flipped .fc-in{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid var(--line);border-radius:6px;padding:20px 22px;background:var(--paper);display:flex;flex-direction:column;justify-content:space-between}
+.fc-back{transform:rotateY(180deg);background:var(--panel)}
+.fc-tag{font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:var(--accent);font-weight:600}
+.fc-q{font-size:19px;font-weight:600;line-height:1.35;margin:10px 0 0}
+.fc-a{font-size:17px;line-height:1.5;margin:10px 0 0}
+.fc-hint{font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:var(--muted)}
+
+/* Click burst: pastel dots pop out from every click */
+.burst{position:fixed;width:var(--s);height:var(--s);border-radius:50%;background:var(--c);pointer-events:none;z-index:50;left:0;top:0;animation:burst .7s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes burst{
+  from{transform:translate(-50%,-50%) scale(1);opacity:1}
+  70%{opacity:.8}
+  to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.2);opacity:0}
+}
+
+/* Reading progress bar: pastel strip across the top of subpages */
+.progress{position:fixed;top:0;left:0;right:0;height:4px;z-index:20;opacity:0;transition:opacity .3s;background:var(--line)}
+.progress span{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#F8CFDA,#C9E9D6,#D9D1F2,#FAE9A0,#C8E0F7,#F7D6BA)}
+
+/* Pastel highlighter strips for key terms */
+mark.hl{background:none;color:inherit;padding:0 .2em;margin:0 -.05em;position:relative;z-index:0;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+mark.hl::before{content:"";position:absolute;left:-3px;right:-3px;top:14%;bottom:10%;z-index:-1;border-radius:2px 6px 3px 7px;transform:rotate(-.5deg);opacity:.85;background:var(--hl)}
+mark.h1{--hl:#F8CFDA}mark.h2{--hl:#C9E9D6}mark.h3{--hl:#D9D1F2}mark.h4{--hl:#FAE9A0}mark.h5{--hl:#C8E0F7}mark.h6{--hl:#F7D6BA}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) mark.h1{--hl:#6A3346}
+  :root:not([data-theme="light"]) mark.h2{--hl:#2E5A44}
+  :root:not([data-theme="light"]) mark.h3{--hl:#4A4278}
+  :root:not([data-theme="light"]) mark.h4{--hl:#6B5D1F}
+  :root:not([data-theme="light"]) mark.h5{--hl:#2D4F6E}
+  :root:not([data-theme="light"]) mark.h6{--hl:#6E4A2E}
+}
+
+footer{max-width:760px;margin:0 auto;padding:32px 24px 48px;font-family:system-ui,sans-serif;font-size:14px;color:var(--muted);border-top:1px solid var(--line)}
+
+@media (max-width:640px){
+  body{font-size:18px}
+  h1{font-size:36px}.hero h1{font-size:40px}
+  h2{font-size:26px;margin-top:56px}
+  .q{font-size:21px}
+  .top .wrap{height:auto;padding-top:12px;padding-bottom:10px;flex-wrap:wrap}
+  nav a{margin-left:0;margin-right:18px}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="progress" id="progress" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home">GENED 1201</a>
+    <nav aria-label="Main">
+      <a href="#home" data-link="home">Home</a>
+      <a href="#week9" data-link="week9">Week 9</a>
+      <a href="#week10" data-link="week10">Week 10</a>
+      <a href="#flashcards" data-link="flashcards">Flashcards</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<section class="page" id="home" aria-labelledby="home-title">
+  <div class="wrap">
+    <img src="/_blob/91751af76844b0ac9b3a9118fe293c1b" alt="Part II: weeks 9 to 14, over a pastel illustration of neurons and immune-like cells" style="display:block;width:100%;aspect-ratio:16/6;object-fit:cover;object-position:center;border-radius:6px;margin:0 0 40px">
+    <div class="hero">
+      <h1 id="home-title">Julia's GENED 1201 Learning Hub</h1>
+      <p class="lede">Foundations of NeuroAI</p>
+      <p class="meta">Synergies between the sciences of natural and artificial intelligence · Prof. Talia Konkle · Fall 2026</p>
+    </div>
+    <p>A companion to the lectures. Each week gets its own page with the main ideas, plain-language definitions, examples, and the scientific work behind them.</p>
+
+    <div class="cards">
+      <a class="card" href="#week9">
+        <p class="t">Week 9: Control Systems, Reasoning, Attention, and Cognitive Architectures</p>
+        <p class="d">How does an intelligent system decide what to focus on, hold in mind, and do next, when it can't process everything at once?</p>
+        <p class="s">Open week →</p>
+      </a>
+      <a class="card" href="#week10">
+        <p class="t">Week 10</p>
+        <p class="d">Loading&hellip;</p>
+        <p class="s">Open week →</p>
+      </a>
+      <div class="soon">More weeks will appear here as the course goes on.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WEEK 8 ============ -->
+<section class="page" id="week9" aria-labelledby="w9-title">
+  <div class="wrap">
+    <p class="meta">Week 9 · Fall 2026</p>
+    <h1 id="w9-title">Control Systems, Reasoning, Attention, and Cognitive Architectures</h1>
+    <p class="q">How does an intelligent system decide what to focus on, hold in mind, and do next, when it can't process everything at once?</p>
+
+    <p>This week asks one question from two directions. AI researchers have learned to make language models "think" before they answer. Neuroscientists have mapped the brain networks that keep us on task. The two fields arrived at similar ideas: step-by-step reasoning, limited capacity, and a control system that decides what matters right now.</p>
+
+    <!-- Part 1 -->
+    <div class="sec" id="ai">
+      <h2>Part 1: From predicting the next word to reasoning</h2>
+
+      <h3>The starting point</h3>
+      <p>A large language model (LLM) is trained to predict the next token (a word or word piece). Given a question, a basic LLM tends to blurt out its first likely answer. That works for simple questions and breaks down for multi-step ones.</p>
+
+      <div class="eg"><strong>Example</strong>"I have 3 apples. My dad has 2 more apples than me. How many apples do we have in total?" A basic model answers "5" (the dad's count) and stops. A model that works through the steps says: I have 3, dad has 3 + 2 = 5, together 8. The second answer is right, and the model is also much more confident in it.</div>
+
+      <h3>Key ideas</h3>
+      <dl class="gloss">
+        <div><dt>Greedy decoding</dt><dd>Generating text by always picking the single most likely next token. Fast, but it can lock in an early mistake.</dd></div>
+        <div><dt>Chain of thought (CoT)</dt><dd>Writing out intermediate steps before the final answer. Showing the work improves multi-step accuracy. Wei et al. (2022) showed that prompting a large model this way unlocks reasoning it otherwise doesn't show.</dd></div>
+        <div><dt>Test-time compute</dt><dd>Spending more computation when answering, usually as hidden "thinking" tokens, rather than making one quick pass. Also called inference scaling.</dd></div>
+        <div><dt>Large reasoning model (LRM)</dt><dd>A model trained to produce long internal reasoning before answering. It differs from a classic LLM mainly in how it was trained to spend tokens on thinking.</dd></div>
+        <div><dt>Reinforcement learning (RL)</dt><dd>Training by trial and reward. The model tries answers, and the ones that earn reward are reinforced. Reasoning models are often trained this way, so good reasoning gets rewarded.</dd></div>
+        <div><dt>Verifiable domain</dt><dd>A task where a program can check whether an answer is right, such as math, code tests, or logic puzzles. These are where RL for reasoning works best, because the reward signal is clean.</dd></div>
+        <div><dt>Self-attention</dt><dd>The transformer mechanism that lets each token weigh how much to draw on every other token in its context. It's a computation inside the model, not the same thing as attention in psychology (see Part 2).</dd></div>
+      </dl>
+
+      <h3>Thinking out loud, in practice</h3>
+      <p>Reasoning models show a "thinking trace" before the final answer. In the box puzzle below, the model reasons through the possibilities, then gives a short answer.</p>
+      <div class="panel">
+        <p><strong>Puzzle.</strong> Three boxes are labeled "Apples," "Oranges," and "Apples and Oranges." Every label is wrong. Each box holds only apples, only oranges, or a mix. You may draw one fruit from one box without looking. Which box do you choose, and how does one fruit let you correctly label all three?</p>
+        <p><strong>Answer.</strong> Draw from the box labeled "Apples and Oranges." It can't be a mix, since its label is wrong, so it holds only one kind. If you draw an apple, that box is the Apples box, the Oranges-labeled box must be the mix, and the last box is Oranges. If you draw an orange, the logic flips the same way.</p>
+      </div>
+
+      <h3>The big idea</h3>
+      <p>Giving a model room to think before it answers, and training it with RL to do so, greatly improves multi-step problem solving. The model is not just recalling an answer. It is searching for a path to one.</p>
+    </div>
+
+    <!-- Harness -->
+    <div class="sec" id="harness">
+      <h2>The harness: what surrounds the model</h2>
+      <p>A model on its own is a reasoner stuck in a box. A <strong>harness</strong> is the code and structure around the model that keeps it on track. Its job is to track goals, deliver the right context at the right moment, call tools, draw on memory, and check the work.</p>
+
+      <svg class="loop" viewBox="0 0 440 260" role="img" aria-label="Control loop: goal, context, model, tool or check, then back to goal">
+        <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#2F4B7C"/></marker></defs>
+        <rect class="box" x="150" y="8" width="140" height="44" rx="6"/>
+        <text x="220" y="35" text-anchor="middle">Goal and subgoals</text>
+        <rect class="box" x="330" y="106" width="100" height="44" rx="6"/>
+        <text x="380" y="133" text-anchor="middle">Context</text>
+        <rect class="box" x="150" y="204" width="140" height="44" rx="6"/>
+        <text x="220" y="231" text-anchor="middle">Model reasons</text>
+        <rect class="box" x="10" y="106" width="100" height="44" rx="6"/>
+        <text x="60" y="133" text-anchor="middle">Tools, memory</text>
+        <path class="arr" marker-end="url(#ah)" d="M290,30 L370,100"/>
+        <path class="arr" marker-end="url(#ah)" d="M380,156 L300,214"/>
+        <path class="arr" marker-end="url(#ah)" d="M150,226 L70,156"/>
+        <path class="arr" marker-end="url(#ah)" d="M70,104 L150,34"/>
+      </svg>
+
+      <div class="formula">Model + Harness = Agent</div>
+
+      <p>The harness is a control loop. It sets a goal, feeds the model what it needs, lets the model act through tools, checks the result, and repeats. Anthropic's engineering team describes the same idea as "context engineering": deciding what information goes into the model's limited window at each step.</p>
+
+      <div class="eg"><strong>Example: dinner for six</strong>"Dinner near Harvard Square for 6, under $20 each, vegetarian options." A good harness breaks this into subgoals: find places nearby, check the price per person, confirm vegetarian dishes, then compare. It calls a search tool, keeps the constraints in memory, and discards options that break them.</div>
+
+      <div class="eg"><strong>Example: a budget for 50 students</strong>"What outings can we afford for 50 students on a $1,000 budget?" The model needs a calculator tool to check that 50 × price stays under $1,000, and a harness that tests every option against the budget before reporting it.</div>
+
+      <div class="eg"><strong>Example: a game</strong>"Make me a Tower of Hanoi game." The harness has to plan the code, run it, check that the discs move by the rules, and fix errors. The verifier here is the program itself.</div>
+
+      <p>Harnesses are not all the same. A coding agent, a research assistant, and a customer chatbot need different goals, tools, and checks. That is why two agent models can behave very differently on the same question.</p>
+    </div>
+
+    <!-- Part 2 -->
+    <div class="sec" id="bio">
+      <h2>Part 2: The brain's control systems</h2>
+
+      <p>Your brain can't process everything at once. Cognitive control is the set of processes that selects what to attend to, holds relevant information in mind, and steers behavior toward a goal, especially when the task is hard or unfamiliar.</p>
+
+      <h3>The multiple-demand (MD) system</h3>
+      <p>A set of frontal and parietal regions, often called the multiple-demand system, becomes more active as tasks get harder. Duncan (2010) proposed this network as a general-purpose system that supports many kinds of demanding thought.</p>
+      <p>Fedorenko, Duncan, and Kanwisher (2013) tested this across tasks including math, spatial and verbal working memory, and the Stroop color-word test. Most of the frontal and parietal MD regions responded more strongly to harder conditions in nearly every task, despite the content being completely different. The same regions were also separable from the brain's language network.</p>
+
+      <div class="eg"><strong>Example</strong>The Stroop test asks you to name the ink color of the word "RED" printed in blue. It's harder than naming the color of a plain blue patch. MD regions light up more for the harder version, and they do the same for a hard math problem compared with an easy one.</div>
+
+      <h3>Working memory and its limits</h3>
+      <p>Working memory is the small, active store where you hold information for the task at hand. Baddeley and Hitch (1974) framed it as a set of temporary buffers. Its capacity is strictly limited (Miller, 1956, estimated about seven items, though later work suggests fewer for complex items), and it is flexible: it holds whatever the current task needs.</p>
+
+      <h3>Attention is selection</h3>
+      <p>In cognitive neuroscience, attention means selection. It is the process that prioritizes some information for processing over other information. This is a different idea from self-attention in transformers, which is a weighting computation. The shared name is a source of confusion, and the concepts are worth keeping apart.</p>
+      <p>Brain imaging shows two broad attention systems. The dorsal attention network (Corbetta and Shulman, 2002) directs attention toward goal-relevant stimuli. The default network is more active during internal thought and when we are not focused on an outside task. Yeo et al. (2011) mapped large-scale networks of this kind across the cortex.</p>
+
+      <h3>Thought as a series of episodes</h3>
+      <p>Duncan (2013) argues that cognition unfolds as a structured series of attentional episodes. A complex problem is solved by handling simpler subproblems one after another, with a control system bringing in the right resources for each. Duncan (2000) linked the MD system to fluid intelligence, the ability to solve novel problems without relying on previously learned knowledge.</p>
+
+      <div class="eg"><strong>Example</strong>Planning a trip is a sequence of episodes: pick dates, check prices, compare routes, confirm the booking. At each step, attention moves to the subproblem in front of you and the rest waits in working memory.</div>
+    </div>
+
+    <!-- Bridge -->
+    <div class="sec" id="bridge">
+      <h2>Bringing the two halves together</h2>
+      <p>The AI and biology stories rhyme. Neither field has settled on the final picture, but the parallels are instructive.</p>
+      <table class="tbl">
+        <thead><tr><th>Idea</th><th>In AI</th><th>In the brain</th></tr></thead>
+        <tbody>
+          <tr><td>Limited capacity</td><td>The context window</td><td>Working memory</td></tr>
+          <tr><td>Step-by-step solving</td><td>Chain of thought, test-time compute</td><td>Attentional episodes</td></tr>
+          <tr><td>Control loop</td><td>The harness</td><td>Cognitive control, MD system</td></tr>
+          <tr><td>Selection</td><td>Self-attention weights</td><td>Attention as selection</td></tr>
+          <tr><td>Checking work</td><td>Verifiable domains and RL rewards</td><td>Monitoring for errors and conflict</td></tr>
+        </tbody>
+      </table>
+      <p>The lesson the lecture points to: intelligence on a limited budget depends on what gets selected, what gets held, and what gets checked. Both systems solve this by breaking problems into pieces and managing a scarce resource.</p>
+    </div>
+
+    <!-- Quiz -->
+    <div class="sec" id="quiz">
+      <h2>Practice quiz: what it reveals</h2>
+      <p>Each puzzle taxes a different part of the control system. Try them before opening the answers.</p>
+
+      <details>
+        <summary>1. Water jugs: measure exactly 4 liters</summary>
+        <p>You have a 3-liter jug, a 5-liter jug, and unlimited water. Track each step as (3-liter, 5-liter).</p>
+        <ol class="clean">
+          <li>Fill the 5-liter jug: (0, 5)</li>
+          <li>Pour from 5 into 3 until the 3 is full: (3, 2)</li>
+          <li>Empty the 3-liter jug: (0, 2)</li>
+          <li>Pour the 2 liters into the 3-liter jug: (2, 0)</li>
+          <li>Fill the 5-liter jug: (2, 5)</li>
+          <li>Top off the 3-liter jug, which takes 1 liter: (3, 4)</li>
+        </ol>
+        <p>Working memory is doing the heavy lifting here: you must hold the current state and the goal in mind across six steps.</p>
+      </details>
+
+      <details>
+        <summary>2. Card rule: "If a card has a vowel on one side, it has an even number on the other."</summary>
+        <p>Visible: A, D, 4, 7. Which cards must you turn over to test the rule?</p>
+        <p><strong>Answer: A and 7.</strong> A could violate the rule if its back is odd. 7 could violate it if its back is a vowel. D and 4 can't break the rule, because the rule says nothing about what consonants or even numbers must have on the back. This is the Wason selection task (Wason, 1968). Most people pick the 4 instead of the 7, because they look for confirming evidence rather than possible violations.</p>
+      </details>
+
+      <details>
+        <summary>3. Cube: which 3D shape matches the three views?</summary>
+        <p><strong>Answer: cube (b).</strong> Matching the top, side, and front views to a wire-wrapped cube requires holding a 3D model in mind and mentally rotating it, a classic demand on working memory and spatial reasoning.</p>
+      </details>
+    </div>
+
+    <!-- Glossary -->
+    <div class="sec" id="glossary">
+      <h2>Glossary</h2>
+      <dl class="gloss">
+        <div><dt>Attention</dt><dd>In neuroscience and psychology: selecting some information for processing over other information.</dd></div>
+        <div><dt>Attentional episode</dt><dd>A bounded stretch of processing focused on one subproblem, as proposed by Duncan (2013).</dd></div>
+        <div><dt>Chain of thought</dt><dd>Step-by-step written reasoning that leads to an answer.</dd></div>
+        <div><dt>Cognitive control</dt><dd>The processes that guide thought and action toward goals, especially when tasks are hard or conflicting.</dd></div>
+        <div><dt>Context window</dt><dd>The amount of text a model can consider at once. It is the model's working memory.</dd></div>
+        <div><dt>Default network</dt><dd>Brain regions more active during internal thought and rest than during focused outside tasks.</dd></div>
+        <div><dt>Dorsal attention network</dt><dd>Brain regions that direct attention toward goal-relevant stimuli.</dd></div>
+        <div><dt>Domain-general vs. domain-specific</dt><dd>Domain-general systems work across any content. Domain-specific systems handle one kind, such as vision, language, or motor control.</dd></div>
+        <div><dt>Fluid intelligence</dt><dd>The ability to reason and solve novel problems without relying on prior knowledge.</dd></div>
+        <div><dt>Greedy decoding</dt><dd>Always choosing the single most probable next token.</dd></div>
+        <div><dt>Harness</dt><dd>The code and structure around a model that manages goals, context, tools, memory, and checks.</dd></div>
+        <div><dt>Large language model (LLM)</dt><dd>A model trained to predict the next token in text.</dd></div>
+        <div><dt>Large reasoning model (LRM)</dt><dd>A model trained to produce extended internal reasoning before answering.</dd></div>
+        <div><dt>Multiple-demand (MD) system</dt><dd>Frontal and parietal regions that are active across many demanding tasks and tied to fluid intelligence.</dd></div>
+        <div><dt>Reinforcement learning (RL)</dt><dd>Learning from rewards for outcomes, so that successful behaviors become more likely.</dd></div>
+        <div><dt>Self-attention</dt><dd>A transformer mechanism for weighting relationships between tokens. Not the same as psychological attention.</dd></div>
+        <div><dt>Test-time compute</dt><dd>Computation spent at answer time, such as generating reasoning tokens.</dd></div>
+        <div><dt>Verifiable domain</dt><dd>A task where correctness can be checked automatically.</dd></div>
+        <div><dt>Working memory</dt><dd>A limited, flexible store for information needed in the current task.</dd></div>
+      </dl>
+    </div>
+
+    <!-- Check -->
+    <div class="sec" id="check">
+      <h2>Check yourself</h2>
+      <h3>Facts to know</h3>
+      <div class="check">
+        <div>What does a harness do on top of a base LLM or LRM, and what does it make possible?</div>
+        <div>What is a large reasoning model, and how does it differ from a classic LLM?</div>
+        <div>What is chain of thought reasoning, and what is test-time compute?</div>
+        <div>What are the multiple-demand regions, and what evidence links them to domain-general processing and fluid intelligence?</div>
+        <div>What is the key property of attention in cognitive neuroscience?</div>
+        <div>What is a task-dependent representational space, and how is it flexible?</div>
+      </div>
+      <h3>Questions to think about</h3>
+      <div class="check">
+        <div>Different agent models give different answers to the same query. What in their training and harnesses might explain that?</div>
+        <div>Should AI systems have different harnesses for different purposes? Is there one ideal harness for general problem solving? Do humans have one?</div>
+      </div>
+    </div>
+
+    <!-- Sources -->
+    <div class="sec" id="sources">
+      <h2>Sources</h2>
+      <p>Works cited on this page and in lecture.</p>
+      <ol class="src">
+        <li>Wei, J., Wang, X., Schuurmans, D., et al. (2022). <em>Chain-of-thought prompting elicits reasoning in large language models.</em> NeurIPS.</li>
+        <li>DeepSeek-AI (2025). <em>DeepSeek-R1: Incentivizing reasoning capability in LLMs via reinforcement learning.</em> arXiv.</li>
+        <li>Zhou, D. Lecture on LLM reasoning, Stanford CS25 (Google DeepMind).</li>
+        <li>Karpathy, A. (2025). <em>Deep dive into LLMs like ChatGPT.</em> Video lecture.</li>
+        <li>Korbak, T., et al. (2025). <em>Chain of thought monitorability: A new and fragile opportunity for AI safety.</em> Position paper.</li>
+        <li>Anthropic Engineering (2025). <em>Effective context engineering for AI agents.</em></li>
+        <li>Duncan, J. (2010). The multiple-demand (MD) system of the primate brain. <em>Trends in Cognitive Sciences.</em></li>
+        <li>Fedorenko, E., Duncan, J., &amp; Kanwisher, N. (2013). Broad domain generality in focal regions of frontal and parietal cortex. <em>PNAS.</em></li>
+        <li>Duncan, J. (2013). The structure of cognition: Attentional episodes in mind and brain. <em>Neuron.</em></li>
+        <li>Duncan, J., et al. (2000). A neural basis for general intelligence. <em>Science.</em></li>
+        <li>Baddeley, A. D., &amp; Hitch, G. (1974). Working memory. <em>Psychology of Learning and Motivation.</em></li>
+        <li>Miller, G. A. (1956). The magical number seven, plus or minus two. <em>Psychological Review.</em></li>
+        <li>Corbetta, M., &amp; Shulman, G. L. (2002). Control of goal-directed and stimulus-driven attention in the brain. <em>Nature Reviews Neuroscience.</em></li>
+        <li>Yeo, B. T. T., et al. (2011). The organization of the human cerebral cortex estimated by intrinsic functional connectivity. <em>Journal of Neurophysiology.</em></li>
+        <li>Vaswani, A., et al. (2017). Attention is all you need. <em>NeurIPS.</em></li>
+        <li>Wason, P. C. (1968). Reasoning about a rule. <em>Quarterly Journal of Experimental Psychology.</em></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="week10" aria-labelledby="w10-title">
+  <div class="wrap">
+    <p class="meta">Week 10 · Fall 2026</p>
+    <h1 id="w10-title">Week 10</h1>
+    <p class="q">Loading&hellip;</p>
+    <p>This week's page is being prepared. Its content will appear here once the lecture materials are added.</p>
+  </div>
+</section>
+
+<section class="page" id="flashcards" aria-labelledby="fc-title">
+  <div class="wrap">
+    <p class="meta">Flashcards · Week 9</p>
+    <h1 id="fc-title">Flashcards</h1>
+    <p class="q">14 cards: 8 lecture questions and 6 key terms. Tap a card to see the answer.</p>
+    <div class="fc-grid">
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Lecture question</span><p class="fc-q">What does a harness do on top of a base LLM or LRM?</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">Tracks goals, delivers the right context at each step, calls tools, draws on memory, and checks results.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Lecture question</span><p class="fc-q">How is a large reasoning model different from a classic LLM?</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">An LLM predicts the next token. An LRM is trained with reinforcement learning to produce extended reasoning before answering.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Lecture question</span><p class="fc-q">What is chain of thought reasoning?</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">Writing intermediate steps before the final answer. Wei et al. (2022) showed this unlocks multi-step reasoning in large models.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Lecture question</span><p class="fc-q">What are the multiple-demand regions, and what evidence links them to domain-general processing?</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">Frontal and parietal regions that respond more strongly to harder tasks across domains (Fedorenko, Duncan &amp; Kanwisher, 2013). They are linked to fluid intelligence (Duncan et al., 2000).</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Lecture question</span><p class="fc-q">What is the key property of attention in cognitive neuroscience?</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">Selection: prioritizing some information for processing over other information.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Lecture question</span><p class="fc-q">What is a task-dependent representational space, and how is it flexible?</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">The way information is encoded depends on the current task, so the same input is represented differently for different goals.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Lecture question</span><p class="fc-q">Why might different agent models behave differently on the same query?</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">They differ in reasoning training (RL post-training), how much test-time compute they use, and their harness (goals, tools, checks).</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Lecture question</span><p class="fc-q">Should AI systems be designed with different harnesses for different purposes?</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">Likely yes, since the harness should fit the task. Whether one ideal harness exists for general intelligence is open.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Key term</span><p class="fc-q">Verifiable domain</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">A task where a program can check the answer automatically, such as math, code tests, or logic. RL for reasoning works best here.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Key term</span><p class="fc-q">Greedy decoding</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">Always picking the single most likely next token. Fast, but it can lock in an early mistake.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Key term</span><p class="fc-q">Self-attention</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">A transformer mechanism where each token weighs every other token in context. Not the same as attention in psychology.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Key term</span><p class="fc-q">Working memory</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">A limited, flexible store that holds information needed for the current task.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Key term</span><p class="fc-q">Fluid intelligence</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">The ability to reason and solve novel problems without relying on prior knowledge.</p></div></div></div></div>
+      <div class="fc" role="button" tabindex="0"><div class="fc-in"><div class="fc-face"><div><span class="fc-tag">Week 9 · Key term</span><p class="fc-q">Test-time compute</p></div><span class="fc-hint">Tap to flip</span></div><div class="fc-face fc-back"><div><span class="fc-tag">Answer</span><p class="fc-a">Computation spent when answering, such as generating hidden reasoning tokens, rather than one quick pass.</p></div></div></div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap" style="padding:0">Julia's GENED 1201 Learning Hub · Foundations of NeuroAI · Fall 2026</div>
+</footer>
+
+<script>
+(function(){
+  var pages = ["home","week9","week10","flashcards"];
+  function show(){
+    var id = (location.hash || "#home").slice(1);
+    if (pages.indexOf(id) === -1) id = "home";
+    document.querySelectorAll(".page").forEach(function(p){
+      p.classList.toggle("active", p.id === id);
+    });
+    document.querySelectorAll("nav a").forEach(function(a){
+      if (a.dataset.link === id) a.setAttribute("aria-current","page");
+      else a.removeAttribute("aria-current");
+    });
+    window.scrollTo(0,0);
+    var names = {home:"Julia's GENED 1201 Learning Hub", week9:"Week 9 · GENED 1201 Hub", week10:"Week 10 · GENED 1201 Hub", flashcards:"Flashcards · GENED 1201 Hub"};
+    document.title = names[id];
+  }
+  window.addEventListener("hashchange", show);
+  show();
+
+  /* Click burst: a small pastel pop at every click (skipped if reduced motion is on) */
+  var calmMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var burstColors = ["#F8CFDA","#C9E9D6","#D9D1F2","#FAE9A0","#C8E0F7","#F7D6BA"];
+  document.addEventListener("click", function(ev){
+    if (calmMotion) return;
+    for (var i = 0; i < 12; i++) {
+      var d = document.createElement("span");
+      var angle = (Math.PI * 2 * i) / 12 + Math.random() * 0.4;
+      var dist = 36 + Math.random() * 44;
+      d.className = "burst";
+      d.style.left = ev.clientX + "px";
+      d.style.top = ev.clientY + "px";
+      d.style.setProperty("--s", (6 + Math.random() * 8) + "px");
+      d.style.setProperty("--c", burstColors[i % burstColors.length]);
+      d.style.setProperty("--dx", (Math.cos(angle) * dist).toFixed(1) + "px");
+      d.style.setProperty("--dy", (Math.sin(angle) * dist).toFixed(1) + "px");
+      document.body.appendChild(d);
+      d.addEventListener("animationend", function(){ this.remove(); });
+    }
+  });
+
+  /* Flashcards: click or press Enter/Space to flip */
+  document.querySelectorAll(".fc").forEach(function(c){
+    c.addEventListener("click", function(){ c.classList.toggle("flipped"); });
+    c.addEventListener("keydown", function(ev){
+      if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); c.classList.toggle("flipped"); }
+    });
+  });
+
+  /* Reading progress: how far the reader has scrolled through the current subpage */
+  var bar = document.getElementById("progress"), fill = bar.firstElementChild;
+  function updateProgress() {
+    var page = document.querySelector(".page.active");
+    var isSub = !!page && page.id !== "home";
+    var pct = 0;
+    if (isSub) {
+      var top = page.getBoundingClientRect().top + window.pageYOffset;
+      var total = page.offsetHeight - window.innerHeight;
+      pct = total > 0 ? (window.pageYOffset - top) / total : 1;
+      pct = Math.max(0, Math.min(1, pct));
+    }
+    fill.style.transform = "scaleX(" + pct + ")";
+    bar.style.opacity = isSub ? "1" : "0";
+    bar.setAttribute("aria-valuenow", String(Math.round(pct * 100)));
+  }
+  window.addEventListener("scroll", updateProgress, {passive: true});
+  window.addEventListener("resize", updateProgress);
+  window.addEventListener("hashchange", function(){ setTimeout(updateProgress, 0); });
+  updateProgress();
+
+  /* Highlight key terms with pastel strips, like a crayon mark */
+  var TERMS = ["Large reasoning model","Large language model","Test-time compute","Reinforcement learning","Dorsal attention network","Default network","Multiple-demand","Attentional episodes","Chain of thought","Greedy decoding","Verifiable domain","Self-attention","Fluid intelligence","Working memory","Cognitive control","Context window","Domain-general","Domain-specific","Harness","Agent","Attention","LRM","LLMs","LLM","MD system","Subgoals","Attentional episode"];
+  var rx = new RegExp("\\b(" + TERMS.slice().sort(function(a,b){return b.length - a.length;}).map(function(t){return t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");}).join("|") + ")\\b", "gi");
+  var skip = {H1:1, H2:1, H3:1, SVG:1, SCRIPT:1, STYLE:1, MARK:1, A:1, SUMMARY:1, EM:1};
+  var walker = document.createTreeWalker(document.querySelector("main"), NodeFilter.SHOW_TEXT);
+  var hits = [], node;
+  while ((node = walker.nextNode())) {
+    var bad = false;
+    for (var e = node.parentNode; e && e !== document.body; e = e.parentNode) {
+      if (skip[e.nodeName] || (e.classList && e.classList.contains("formula"))) { bad = true; break; }
+    }
+    rx.lastIndex = 0;
+    if (!bad && rx.test(node.nodeValue)) hits.push(node);
+  }
+  var count = 0;
+  hits.forEach(function(textNode){
+    var text = textNode.nodeValue, frag = document.createDocumentFragment(), last = 0, m;
+    rx.lastIndex = 0;
+    while ((m = rx.exec(text))) {
+      if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+      var mk = document.createElement("mark");
+      mk.className = "hl h" + ((count++ % 6) + 1);
+      mk.textContent = m[0];
+      frag.appendChild(mk);
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    textNode.parentNode.replaceChild(frag, textNode);
+  });
+})();
+</script>
+</body>
+</html>
